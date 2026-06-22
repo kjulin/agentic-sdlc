@@ -1,0 +1,11 @@
+{
+  "name": "agentic-sdlc",
+  "version": "0.1.0",
+  "description": "Personal agentic SDLC: concept → spec → verification-plan → implement → verify, as slash commands.",
+  "author": {
+    "name": "kjulin"
+  },
+  "homepage": "https://github.com/kjulin/agentic-sdlc",
+  "repository": "https://github.com/kjulin/agentic-sdlc",
+  "license": "MIT"
+}

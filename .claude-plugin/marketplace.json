@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "agentic-sdlc",
+  "description": "Personal agentic SDLC — slash commands for each stage of the lifecycle.",
+  "owner": {
+    "name": "kjulin",
+    "url": "https://github.com/kjulin"
+  },
+  "plugins": [
+    {
+      "name": "agentic-sdlc",
+      "source": {
+        "source": "github",
+        "repo": "kjulin/agentic-sdlc"
+      },
+      "description": "Slash commands for the stages of a personal agentic SDLC: concept, spec, verification-plan, implement, verify.",
+      "homepage": "https://github.com/kjulin/agentic-sdlc",
+      "license": "MIT",
+      "keywords": ["sdlc", "agents", "claude-code", "slash-commands"]
+    }
+  ]
+}
