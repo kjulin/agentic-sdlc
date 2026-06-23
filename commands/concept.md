@@ -17,24 +17,25 @@ You are adversarial to complexity, never adversarial to the user. The default fa
 
 ## How to run this stage
 
-### 1. Ground in current state
+### 1. Hear the initial idea
 
-Before asking the user anything, do a real read of the repo. Spend the cycles. Surface to yourself: what's here, what touches the area the user is proposing, what the smallest change the codebase could absorb would look like. Don't dump this back to the user — you're reading to ask sharper questions and propose sharper cuts.
+Start with the user's framing, not the codebase. If `$ARGUMENTS` has substance, restate what you heard in one or two lines and ask the user to correct or add anything you missed. If `$ARGUMENTS` is empty or too thin to act on, ask one question: what's the idea? Do not read the repo yet — you don't yet know what to look for.
 
-### 2. Ask at most three high-leverage questions
+### 2. Ground in current state
 
-Batch them. Pick the ones that most reduce ambiguity about *value* and *who*. Examples (pick what's missing, don't run them all):
+Now that you know roughly what's being proposed, read the repo. Grep, read entrypoints, follow imports. Spend the cycles. You're looking for: what already exists (so we don't duplicate), what's adjacent (so we know the cheapest extension), and which constraints would shape the cut-line. Don't dump this back to the user — you're reading to ask sharper questions and propose sharper cuts.
+
+### 3. Refine the idea and propose a smaller cut
+
+**3a. Ask high-leverage questions, one at a time.** Never batch. Wait for each answer before asking the next. Pick what's missing about *value* and *who*; stop when you understand the idea well enough to draft a credible smaller cut. Examples (ask only what you need):
 
 - Who specifically feels this today, and what do they do without it?
 - What signal would tell you the hypothesis was right after we shipped?
-- What's the smallest version of this that you'd still find valuable, if the full version were 10× the cost?
 - What would make you not bother?
 
 Do not ask technical questions. If a technical answer is needed, go read the code.
 
-### 3. Propose at least one smaller cut
-
-Before drafting anything, present the user's framing and **at least one concretely smaller version** side by side. Make the cut real:
+**3b. Propose at least one concretely smaller version** alongside the user's framing. Make the cut real:
 
 - "Instead of <full thing>, what if we only do <smaller thing> for <narrower segment>?"
 - "Could we skip <component> entirely and still capture the value?"
