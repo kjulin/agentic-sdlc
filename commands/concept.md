@@ -17,6 +17,16 @@ You are adversarial to complexity, never adversarial to the user. The default fa
 
 ## How to run this stage
 
+### Preflight — fail fast before any user interaction
+
+Verify all three:
+
+- Current directory is a git repo (`git rev-parse --is-inside-work-tree` returns `true`).
+- `gh` is installed and authenticated (`gh auth status` succeeds).
+- Working tree is clean (`git status --porcelain` is empty).
+
+If any check fails, stop and tell the user exactly which one and the one-line fix. This stage opens a PR at the end — without these prerequisites it can't finish.
+
 ### 1. Hear the initial idea
 
 Start with the user's framing, not the codebase. If `$ARGUMENTS` has substance, restate what you heard in one or two lines and ask the user to correct or add anything you missed. If `$ARGUMENTS` is empty or too thin to act on, ask one question: what's the idea? Do not read the repo yet — you don't yet know what to look for.
@@ -49,11 +59,14 @@ Before you draft the card, the user **must** explicitly acknowledge what they co
 
 Wait for an explicit answer. If the user tries to wave you past this step, ask again. The answer goes in the card as the cut-line.
 
-### 5. Pick a slug, create the folder
+### 5. Pick a slug, branch, create the folder
 
-Propose a short, hyphenated slug for the concept (e.g. `pdf-export`, `free-tier-limits`, `oss-onboarding`). Confirm with the user. Then create `specs/<slug>/concept.md` in the current working directory. The same folder will hold the tech-spec and later-stage artifacts.
+Propose a short, hyphenated slug for the concept (e.g. `pdf-export`, `free-tier-limits`, `oss-onboarding`). Confirm with the user. Then, in order:
 
-If `specs/<slug>/` already exists, stop and confirm before writing — there may be an active concept in flight.
+- Detect the default branch: `gh repo view --json defaultBranchRef -q .defaultBranchRef.name`.
+- Fetch latest: `git fetch origin <default>`.
+- Create and switch to a new branch off latest origin: `git checkout -b concept/<slug> origin/<default>`. If the branch already exists locally or on origin, stop and ask the user whether to (a) pick a different slug, (b) resume the existing branch, or (c) delete and recreate. Default to (a) unless the user says otherwise.
+- Create `specs/<slug>/concept.md`. The same folder will hold the tech-spec and later-stage artifacts. If `specs/<slug>/` already exists on this branch, stop and confirm before writing.
 
 ### 6. Draft `specs/<slug>/concept.md`
 
@@ -81,11 +94,19 @@ Use this structure. Not every concept needs every field — if one is genuinely 
 
 ### 7. Iterate
 
-Show the draft. Iterate on the user's feedback. The card lands when the user signs off.
+Show the draft. Iterate on the user's feedback. Edit the file in the working tree — do **not** commit during iteration. The card lands when the user explicitly signs off.
 
-### 8. Hand off
+### 8. Commit, push, open PR
 
-End by telling the user the next stage is `/spec`, and that it will read `specs/<slug>/concept.md`.
+Only after signoff:
+
+- Stage and commit only `specs/<slug>/concept.md` with message `Add concept: <title>`.
+- Push: `git push -u origin concept/<slug>`.
+- Open the PR: `gh pr create --title "Concept: <title>" --body "<body>"`. The body should include the full card content (so reviewers don't need to click through to the file) and a one-line note that the next stage is `/spec` once merged.
+
+### 9. Hand off
+
+The concept stage is **not complete** until the PR is merged. Tell the user: "Concept is in review at `<PR URL>`. When the PR is merged, run `/spec` to design the technical approach."
 
 ## Guardrails
 
@@ -94,3 +115,5 @@ End by telling the user the next stage is `/spec`, and that it will read `specs/
 - Don't ask technical questions. Read the code.
 - Don't accept "we considered nothing smaller" as a cut-line answer — that means the simplification work didn't happen. Try again.
 - One concept per invocation. One `specs/<slug>/concept.md` per `/concept`.
+- Do not commit during iteration. Only the final card lands in git, as a single commit in step 8.
+- Do not open the PR until the user has signed off on the draft in chat.
