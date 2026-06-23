@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
-  "name": "agentic-sdlc",
-  "description": "Personal agentic SDLC — slash commands for each stage of the lifecycle.",
+  "name": "kjulin",
+  "description": "kjulin's personal Claude Code plugin marketplace.",
   "owner": {
     "name": "kjulin",
     "url": "https://github.com/kjulin"
