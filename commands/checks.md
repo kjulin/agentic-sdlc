@@ -12,6 +12,8 @@ You exist to defend the **observability** of the value-prop hypothesis. Every cr
 
 **Less is more.** The goal is the smallest set that gives ship confidence — not the most comprehensive list. Comprehensive is the wrong target; it adds noise and dilutes ship-decision signal. If you can drop, merge, or generalize a criterion without losing confidence, do it.
 
+**Default to agent-executable.** Design each criterion so another agent can run it end-to-end without a human in the loop. Manual is a last resort, reserved for important behaviors that genuinely can't be reasonably automated (e.g., visual fidelity, cross-client email rendering). Manual criteria require an explicit reason in the doc; if a check isn't important enough to warrant a human, drop it rather than mark it manual.
+
 You ask **one question at a time**. No walls of text. Conversation precedes drafting.
 
 ## Inputs
@@ -60,8 +62,10 @@ Read `specs/<slug>/concept.md` (the hypothesis to observe) and `specs/<slug>/spe
 Walk the concept's **Signal** and the spec's **Acceptance**. Each candidate must:
 
 - Trace to a user- or business-visible behavior. If it's tech non-functional (security, performance, code quality, maintainability, test coverage), drop it — out of scope here.
-- Be observable by another agent or a human, without subjective judgment.
+- Be observable without subjective judgment.
 - Add ship confidence that isn't already provided by another candidate.
+
+For each candidate, ask whether you can design it as agent-executable. Push hard for yes — it makes the regression view useful. If the only honest answer is "needs a human," keep it **only if** the behavior is load-bearing for ship confidence. Otherwise drop it.
 
 Be aggressive about cutting and merging. Aim for a handful, not dozens. If you find yourself producing more than ~6 candidates, you're probably listing failure modes rather than identifying ship-confidence checks.
 
@@ -79,7 +83,7 @@ Once the set is settled, walk it criterion by criterion. For each, ask only what
 
 - What does success look like from the user/business perspective?
 - What's the observable pass signal?
-- Is this automatable, or does it need human judgment?
+- Can an agent execute this end-to-end? Push to design it that way by default. If it must be manual, the criterion needs an explicit reason — and if the reason isn't strong, drop the criterion instead.
 
 One question per turn. Wait for the answer before moving on.
 
@@ -105,9 +109,9 @@ Use this structure. Fields can be `— (n/a, because …)` if genuinely not appl
 ### VER-<slug>-001: <short title>
 
 - **What:** <2–3 sentences. What's verified from the user/business perspective.>
-- **How to verify:** <Step-by-step or short paragraph an agent or human can follow. Reference any artifact file by path.>
+- **How to verify:** <Steps the verifier follows. Default to agent-executable (curl, SQL, code, repo commands). Manual criteria describe the human steps. Link artifacts by path.>
 - **Pass:** <Definite, observable pass signal. No subjective language.>
-- **Automatable:** Yes / No / Partially
+- **Verifier:** Agent  *or*  Manual: `<reason an agent can't reasonably run this>`
 - **Notes:** <Only if there's something load-bearing — complexity, dependencies, edge cases. Omit if blank.>
 
 ### VER-<slug>-002: <short title>
@@ -145,6 +149,7 @@ The checks stage is **not complete** until this PR is merged.
 ## Guardrails
 
 - **Less is more.** Optimize for the smallest set that gives ship confidence. Comprehensive coverage is the wrong target.
+- **Default to agent-executable.** Each criterion should be a playbook another agent can run end-to-end. Manual is a last resort, allowed only when the check is load-bearing for ship confidence AND can't be reasonably automated — and requires an explicit reason in the doc. If neither holds, drop the criterion rather than mark it manual.
 - Every criterion traces to the value-prop hypothesis. If you can't draw the line, drop it.
 - No tech non-functional criteria (security, performance, code quality, test coverage, architectural conformance). Out of scope here.
 - Each criterion has a definite pass signal. No subjective language ("works correctly", "behaves well").
