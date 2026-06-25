@@ -47,27 +47,29 @@ Verify `specs/<slug>/verification.md` is on the default branch:
 
 If checks aren't on the default branch, tell the user the checks PR appears to still be in review and recommend merging before implementing. Allow them to proceed if they explicitly say so — the implementation will be based on draft checks.
 
-### 3. Read everything in the spec folder
+### 3. Branch — first run or continuation?
 
-Read all files in `specs/<slug>/`:
+Branch before reading the spec folder. Validation reports are written by the verification stage to the `implement/<slug>` branch, not to the default branch, so you can only see them once you're on the branch.
+
+- `git fetch origin`.
+- If `implement/<slug>` exists locally or on origin, this is a continuation. Switch to it: `git checkout implement/<slug>` (or `git checkout -b implement/<slug> origin/implement/<slug>` if only on origin).
+- Otherwise this is a first run. Create it: `git checkout -b implement/<slug> origin/<default>`.
+
+### 4. Read everything in the spec folder
+
+Now on the branch, read all files in `specs/<slug>/`:
 
 - `concept.md` to understand the value-prop hypothesis you're delivering.
 - `spec.md` to understand what to build.
 - `verification.md` to understand the bar for shipping.
 - Artifacts (mocks, diagrams, payloads) for the proposed shape.
-- Validation reports for what passed and failed in prior runs.
+- Validation reports — written by the verification stage to this branch — for what passed and failed in prior runs.
 
 If validation reports exist, prioritize fixing the failed criteria. If they don't, you're on a first run — implement the whole spec.
 
-### 4. Ground in the repo
+### 5. Ground in the repo
 
 Read the repo widely enough to know what the spec's `Changes` and `Sequence` actually touch. Follow the spec; don't redesign it. If you find the spec genuinely can't be followed (a file it names doesn't exist, the interface it assumes is different, etc.), stop and surface it — don't paper over.
-
-### 5. Branch — first run or continuation?
-
-- `git fetch origin`.
-- If `implement/<slug>` exists locally or on origin, this is a continuation. Switch to it: `git checkout implement/<slug>` (or `git checkout -b implement/<slug> origin/implement/<slug>` if only on origin).
-- Otherwise this is a first run. Create it: `git checkout -b implement/<slug> origin/<default>`.
 
 ### 6. Do the work
 
@@ -95,10 +97,10 @@ After committing:
 
 ### 9. Hand off
 
-Tell the user:
+The implementation PR is **not mergeable from this stage** — it ships only after the verification stage reports a clean run. Never tell the user to merge from `/implement`.
 
-- If first run: "Implementation opened at `<PR URL>`. Run the verification stage to check it against `specs/<slug>/verification.md`."
-- If continuation: "Pushed updates to `<PR URL>`. Re-run the verification stage to confirm the failing checks now pass."
+- If first run: "Implementation opened at `<PR URL>`. **Do not merge yet** — run the verification stage to check it against `specs/<slug>/verification.md`. The PR is mergeable only after all checks pass."
+- If continuation: "Pushed updates to `<PR URL>`. Re-run the verification stage to confirm the failing checks now pass. Merge only after verification reports a clean run."
 
 ## Guardrails
 
