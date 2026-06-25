@@ -67,6 +67,8 @@ Now on the branch, read all files in `specs/<slug>/`:
 
 If validation reports exist, prioritize fixing the failed criteria. If they don't, you're on a first run — implement the whole spec.
 
+**On continuation runs, also read all issue comments on the implement PR.** Fetch via `gh pr view <PR number> --json comments`. The user may have left direction there about how to handle specific failures or what approach to take — treat anything written there as priority input alongside the validation report.
+
 ### 5. Ground in the repo
 
 Read the repo widely enough to know what the spec's `Changes` and `Sequence` actually touch. Follow the spec; don't redesign it. If you find the spec genuinely can't be followed (a file it names doesn't exist, the interface it assumes is different, etc.), stop and surface it — don't paper over.
